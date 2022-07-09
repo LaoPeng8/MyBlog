@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <!-- 导航 th:with="n=0" -->
+    <nav class="ui attached segment m-padding-tb-mini m-shadow-small" th:fragment="menu(n)">
+<!--        <div class="ui container">-->
+<!--            <div class="ui secondary stackable menu">-->
+<!--                <h3 class="ui header item">LaoPeng</h3>-->
+<!--                <a th:href="@{/}" class="m-item item m-mobile-hide" th:classappend="${n==1} ? 'active'"><i class="mini home icon"></i>首页</a>-->
+<!--                <a th:href="@{/types/-1}" class="m-item item m-mobile-hide" th:classappend="${n==2} ? 'active'"><i class="mini idea icon"></i>分类</a>-->
+<!--                <a th:href="@{/tags/-1}" class="m-item item m-mobile-hide" th:classappend="${n==3} ? 'active'"><i class="mini tags icon"></i>标签</a>-->
+<!--                <a th:href="@{/archives}" class="m-item item m-mobile-hide" th:classappend="${n==4} ? 'active'"><i class="mini clone icon"></i>归档</a>-->
+<!--                <a th:href="@{/about}" class="m-item item m-mobile-hide" th:classappend="${n==5} ? 'active'"><i class="mini info icon"></i>关于我</a>-->
+<!--                <div class="right m-item item m-mobile-hide">-->
+<!--                    <form name="search" th:action="@{/search}" method="post" target="_blank">-->
+<!--                        <div class="ui icon transparent input">-->
+<!--                            <input type="text" name="query" placeholder="Search..." th:value="${query}" />-->
+<!--                            <i onclick="document.forms['search'].submit()" class="search link icon"></i>-->
+<!--                        </div>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <a href="#" class="ui menu toggle icon button m-right-top m-mobile-show">-->
+<!--            <i class="sidebar icon"></i>-->
+<!--        </a>-->
+    </nav>
+
+    <!-- 底部footer -->
+    <footer class="ui vertical segment " th:fragment="footer">
+        <div class="ui center aligned container">
+            <div class="ui inverted section divider" style="margin-top: 0px; margin-bottom: 40px;"></div>
+            <div class="ui divided stackable grid">
+                <div class="three wide column">
+                    <div class="ui link list">
+                        <div class="item">
+                            <img th:src="@{/images/wechat.jpg}" class="ui rounded image" style="width: 120px;" alt="微信二维码" />
+                        </div>
+                    </div>
+                </div>
+                <div class="four wide column">
+                    <h4 class="ui header m-text-spaced">联系我</h4>
+                    <div class="ui link list">
+                        <!-- 此处利用 国际化从配置文件取值, 来投机取巧将值变为动态 实际就是利用了国际化 -->
+                        <a href="#" class="item m-text-spaced" th:text="#{index.email}"></a>
+                        <a href="#" class="item m-text-spaced" th:text="#{index.qq}"></a>
+                    </div>
+                </div>
+                <div class="nine wide column">
+                    <h4 class="ui header m-text-spaced">LaoPeng</h4>
+                    <p class="m-text-spaced m-text-thin">
+                        <p>无他，但手熟尔。 —— 欧阳修</p><!-- 熟能生巧 -->
+                        <p>蚓无爪牙之利，筋骨之强，上食埃土，下饮黄泉，用心一也。 —— 荀子</p><!-- 坚持不懈 -->
+                        <p>人恒过，然后能改；困于心，衡于虑，而后作；征于色，发于声，而后喻。 —— 孟子</p><!-- 知错能改 -->
+                    </p>
+                </div>
+            </div>
+            <div class="ui inverted section divider" style="margin-bottom: 15px;"></div>
+            <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2020 LaoPeng Designed by LaoPeng</p>
+        </div>
+    </footer>
+</html>

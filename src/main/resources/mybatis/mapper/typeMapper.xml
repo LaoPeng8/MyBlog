@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjj.mapper.TypeMapper">
+
+    <!-- 新增一个分类 第一个if: id!=null 就是如果传递了id,那么就按照传递的id  第二个if: id==null 就是如果没有传递id,那么就id自增 -->
+    <insert id="saveType" parameterType="com.pjj.entity.Type">
+        <if test="#{id}!=null">
+            insert into t_type values(#{id},#{name})
+        </if>
+        <if test="#{id}==null">
+            insert into t_type(name) values(#{name})
+        </if>
+    </insert>
+
+    <!-- 根据id查询一个分类 -->
+    <select id="getType" parameterType="long" resultType="com.pjj.entity.Type">
+        select * from t_type where id=#{id}
+    </select>
+
+
+    <!--两个id可能会相冲，取别名即可-->
+    <resultMap id="resultType" type="com.pjj.entity.Type">
+        <id property="id" column="tid"/>
+        <result property="name" column="name"/>
+        <collection property="blogs" ofType="Blog">
+            <id property="id" column="bid"/>
+            <result property="title" column="title"/>
+            <result property="typeId" column="type_id"/>
+        </collection>
+    </resultMap>
+
+    <select id="getAllTypeByTop" resultMap="resultType">
+        SELECT t.id tid, t.name, b.id bid, b.title, b.type_id
+        FROM t_type t, t_blog b
+        WHERE t.id = b.type_id
+    </select>
+
+    <!-- 根据name查询一个分类 -->
+    <select id="getTypeByName" parameterType="string" resultType="com.pjj.entity.Type">
+        select * from t_type where name=#{name}
+    </select>
+
+    <!-- 查询全部分类 -->
+    <select id="getAllType" resultType="com.pjj.entity.Type">
+        select * from t_type
+    </select>
+
+    <update id="updateType" parameterType="com.pjj.entity.Type">
+        update t_type set name=#{name} where id=#{id}
+    </update>
+
+    <delete id="deleteType" parameterType="long">
+        delete from t_type where id=#{id}
+    </delete>
+
+    <select id="countType" resultType="int">
+        select count(*) from t_type
+    </select>
+
+</mapper>

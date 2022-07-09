@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <nav class="ui attached segment m-padding-tb-mini m-shadow-small" th:fragment="menu(n)">
+        <div class="ui container">
+            <div class="ui secondary stackable menu">
+                <h3 class="ui header item">管理后台</h3>
+                <a th:href="@{/admin/blogs}" class="m-item item m-mobile-hide" th:classappend="${n==1} ? 'active'"><i class="mini home icon"></i>博客</a>
+                <a th:href="@{/admin/types}" class="m-item item m-mobile-hide" th:classappend="${n==2} ? 'active'"><i class="mini idea icon"></i>分类</a>
+                <a th:href="@{/admin/tags}" class="m-item item m-mobile-hide" th:classappend="${n==3} ? 'active'"><i class="mini tags icon"></i>标签</a>
+                <div class="right menu item m-item m-mobile-hide">
+                    <div class="ui dropdown item">
+                        <div class="text">
+                            <img th:src="@{${session.user.getAvatar()}}" alt="头像" class="ui avatar image" />
+                            <span th:text="${session.user.getNickname()}"></span>
+                        </div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <a th:href="@{/admin/logout}" class="item">注销</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="ui menu toggle icon button m-right-top m-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+    </nav>
+
+    <div class="ui attached pointing menu" th:fragment="menuTwo(n)">
+        <div class="ui container">
+            <div class="right menu">
+                <a th:href="@{/admin/index}" class="blue item" th:classappend="${n==1} ? 'active'">首页</a>
+                <a th:href="@{/admin/blogs}" class="blue item" th:classappend="${n==2} ? 'active'">列表</a>
+                <a th:href="@{/admin/blogsInput}" class="item" th:classappend="${n==3} ? 'active'">发布</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

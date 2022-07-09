@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><!-- 移动端更好的浏览, 缩放比例 -->
+		<title>博客管理</title>
+		<!--semantic-ui-->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+		<link rel="stylesheet" th:href="@{/css/me.css}" />
+	</head>
+	<body>
+
+		<!-- 导航 -->
+		<nav th:replace="~{commons/adminCommons::menu(0)}"></nav>
+		<!-- 二级导航 -->
+		<div class="ui attached pointing menu">
+			<div class="ui container">
+				<div class="right menu">
+					<a th:href="@{/admin/index}" class="active blue item">首页</a>
+					<a th:href="@{/admin/blogs}" class="blue item">列表</a>
+					<a th:href="@{/admin/blogs/input}" class="blue item">发布</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="m-padding-tb-big m-container">
+			<div class="ui container">
+				<div class="ui success large message">
+					<h3>Hi,</h3>
+					<p th:text="${session.user.getNickname()+', 欢迎登录'}"></p>
+				</div>
+				<img src="http://pic.netbian.com/uploads/allimg/200623/235026-15929274260112.jpg" alt="" class="ui rounded bordered fluid image">
+			</div>
+		</div>
+
+
+		<!-- 底部footer -->
+		<footer th:replace="~{commons/commons::footer}"></footer>
+
+
+		<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+		<script type="text/javascript">
+			$('.menu.toggle').click(function() {
+				$('.m-item').toggleClass('m-mobile-hide');
+			});
+
+			$('.ui.dropdown').dropdown();
+		</script>
+	</body>
+</html>

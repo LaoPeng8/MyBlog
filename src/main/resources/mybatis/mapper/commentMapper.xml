@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjj.mapper.CommentMapper">
+
+    <resultMap id="resultComment" type="com.pjj.entity.Comment">
+        <id property="id" column="id" />
+        <result property="nickname" column="nickname" />
+        <result property="email" column="email" />
+        <result property="content" column="content" />
+        <result property="avatar" column="avatar" />
+        <result property="createTime" column="create_time" />
+        <result property="admincomment" column="admincomment" />
+        <association property="blog" javaType="com.pjj.entity.Blog">
+            <id property="id" column="BlogId"/>
+        </association>
+        <association property="parentComment" javaType="com.pjj.entity.Comment">
+            <id property="id" column="parent_comment_id" />
+        </association>
+    </resultMap>
+
+    <!-- 根据博客id查询评论  而且根据评论创建时间排序, 最新发的评论在最上面 , ASC降序 也就是时间最大的在最下面 也就是最新发布的 -->
+    <select id="listCommentByBlogId" parameterType="long" resultMap="resultComment">
+        SELECT c.*,b.`id` BlogId,b.`title`
+        FROM t_comment c
+        INNER JOIN t_blog b ON c.`blog_id`=b.`id`
+        WHERE c.`blog_id`=#{id}
+        ORDER BY c.create_time ASC
+    </select>
+
+    <!-- 根据博客id查询评论  而且根据评论创建时间排序, 最新发的评论在最上面 , ASC降序 也就是时间最大的在最下面 也就是最新发布的
+         并且  父评论id为-1 就是只能查询出 顶级评论, 那些在回复别人评论的评论 属于子级评论,是查询不出来的 -->
+    <select id="listCommentByBlogIdAndParentNull" parameterType="long" resultMap="resultComment">
+        SELECT c.*,b.`id` BlogId,b.`title`
+        FROM t_comment c
+        INNER JOIN t_blog b ON c.`blog_id`=b.`id`
+        WHERE c.`blog_id`=#{id} AND c.`parent_comment_id`=-1
+        ORDER BY c.create_time ASC
+    </select>
+
+    <!-- 根据博客id查询评论  而且根据评论创建时间排序, 最新发的评论在最上面 , ASC降序 也就是时间最大的在最下面 也就是最新发布的
+         并且 只能查出 回复别人的子级评论  顶级评论是查询不出来的 -->
+    <select id="listCommentByBlogIdAndParentNotNull" resultMap="resultComment">
+        SELECT c.*,b.`id` BlogId,b.`title`
+        FROM t_comment c
+        INNER JOIN t_blog b ON c.`blog_id`=b.`id`
+        WHERE c.`blog_id`=#{blogId} AND c.`parent_comment_id`=#{parentId}
+        ORDER BY c.create_time ASC
+    </select>
+
+
+
+    <insert id="saveComment" parameterType="com.pjj.entity.Comment">
+        INSERT INTO t_comment(nickname,email,content,avatar,create_time,blog_id,parent_comment_id,admincomment)
+        VALUES(#{nickname},#{email},#{content},#{avatar},#{createTime},#{blog.id},#{parentComment.id},#{admincomment})
+    </insert>
+
+    <!-- 根据 评论对象的父评论id 查询出父评论   (其实就是根据id查询评论, 只不过就是传过来的id是一个评论的父评论id,所以查出来的评论就是 传值过来的评论的父评论) -->
+    <select id="selectParentCommentByParentCommentId" parameterType="long" resultMap="resultComment">
+        SELECT c.*,b.`id`,b.`title`
+        FROM t_comment c
+        INNER JOIN t_blog b ON c.`blog_id`=b.`id`
+        WHERE c.`id` = #{id}
+    </select>
+
+    <delete id="deleteComment" parameterType="long">
+        delete from t_comment where id=#{id}
+    </delete>
+
+    <select id="countComment" resultType="int">
+        select count(*) from t_comment
+    </select>
+</mapper>

@@ -1,0 +1,210 @@
+/* 1em = 14px 在CSS中,通过对某一样式声明 !important,可以更改默认的CSS样式优先级规则,使该条样式属性声明具有最高优先级 */
+body{
+	background: url("../images/bg.jpg");			/*默认背景*/
+	
+	/* 设置了图片填充整个背景, 并且不会随鼠标的上下滑动而滑动 */
+	background-size: cover;
+	background-attachment: fixed;
+	background-size:100% 100%;
+}
+
+.m-padded-mini{
+	padding: 0.2em !important;
+}
+.m-padded-tiny{
+	padding: 0.3em !important;
+}
+.m-padding-tb-mini{
+	padding-top: 0.2em !important;
+	padding-bottom: 0.2em !important;
+}
+.m-margin-lr-big{
+	margin-left: 4.5em !important;
+	margin-right: 4.5em !important;
+}
+.m-padding-tb-tiny{
+	padding-top: 0.3em !important;
+	padding-bottom: 0.3em !important;
+}
+.m-padding-tb-small{
+	padding-top: 0.5em !important;
+	padding-bottom: 0.5em !important;
+}
+.m-padding-tb{
+	padding-top: 1em !important;
+	padding-bottom: 1em !important;
+}
+.m-padding-tb-large{
+	padding-top: 2em !important;
+	padding-bottom: 2em !important;
+}
+.m-padding-tb-big{
+	padding-top: 3em !important;
+	padding-bottom: 3em !important;
+}
+.m-padding-tb-huge{
+	padding-top: 4em !important;
+	padding-bottom: 4em !important;
+}
+.m-padding-tb-massive{
+	padding-top: 5em !important;
+	padding-bottom: 5em !important;
+}
+
+.m-padded-lr-responsive{
+	padding-left: 4em !important;
+	padding-right: 4em !important;
+}
+.m-padded-lr-responsive-mimi{
+	padding-left: 1em !important;
+	padding-right: 1em !important;
+}
+
+/* -------------text--------------- */
+.m-text{/* 下面三个的合体 */
+	font-weight: 100 !important;
+	letter-spacing: 1px !important;
+	line-height: 1.8 !important;
+}
+.m-text-thin{
+	font-weight: 300 !important;/* 字的粗细 */
+}
+.m-text-spaced{
+	letter-spacing: 1px !important;/* 字间距 */
+}
+.m-text-lined{
+	line-height: 1.8 !important;/* 行间距 */
+}
+
+/* ------------margin-------------- */
+.m-margin-top-small{
+	margin-top: 0.5em !important;
+}
+.m-margin-top{
+	margin-top: 1em !important;
+}
+.m-margin-top-large{
+	margin-top: 2em !important;
+}
+
+.m-margin-tb-tiny{
+	margin-top: 0.3em !important;
+	margin-bottom: 0.3em !important;
+}
+.m-margin-tb-small{
+	margin-top: 0.5em !important;
+	margin-bottom: 0.5em !important;
+}
+.m-margin-tb{
+	margin-top: 0.8em !important;
+	margin-bottom: 0.8em !important;
+}
+.m-margin-lr-small{
+	margin-left: 0.8em !important;
+	margin-right: 0.8em !important;
+}
+.m-margin-lr{
+	margin-left: 1em !important;
+	margin-right: 1em !important;
+}
+.m-margin-bottom-mini{
+	margin-bottom: 0.2em !important;
+}
+.m-margin-bottom-small{
+	margin-bottom: 0.5em !important;
+}
+
+/* ------------opacity------------- */
+.m-opacity-mini{
+	opacity: 0.8 !important;/* 透明度 */
+}
+.m-opacity-tiny{
+	opacity: 0.6 !important;/* 透明度 */
+}
+
+/* -----------position------------- */
+.m-right-top{
+	position: absolute;/* 绝对位置 定位 右上角 */
+	top: -8px;
+	right: 20px;
+}
+.m-fixed { /* 固定定位:fixed  作用:将元素固定现在页面的指定位置,不会随着滚动条的移动而改变位置. */
+	position: fixed !important;
+	z-index: 10 !important;/* 设置该样式的标签 是在最上层显示的 */
+}
+.m-right-bottom{
+	bottom: 40px !important;
+	right: 20px !important;
+}
+
+/* -------------display------------- */
+
+.m-inline-block{
+	display: inline-block !important;/* 把块级元素变为行内元素 */
+}
+
+/* ----------container---------- */
+
+.m-container-large{
+	max-width: 75em !important;
+	margin: auto !important;
+}
+.m-container{
+	max-width: 68em !important;
+	margin: auto !important;
+}
+.m-container-small{
+	max-width: 60em !important;
+	margin: auto !important;
+}
+
+/* ----------shadow----------- */
+.m-shadow-small{/* 阴影 */
+	-webkit-box-shadow: 0 4px 6px rgba(211,211,211,0.5) !important;/* 适配部分浏览器 */
+	box-shadow: 0 4px 6px rgba(211,211,211,0.5) !important;
+	/* 0好像是左右阴影为0  4px好像是是上下阴影为4px 6px是虚幻的一个层度 rgb 211,211,211是一个灰色 */
+}
+
+.m-pc-wide{
+	width: 100% !important;
+}
+
+/* ----------color------------ */
+.m-black{
+	color: #333 !important;
+}
+.m-blue{
+	color: dodgerblue !important;
+}
+
+.m-mobile-show{/* 在pc端时隐藏 */
+	display: none !important;
+}
+
+/* 这个功能好像叫媒体查询 嘛的还没学过 前端果然没有表面上这么简单 */
+@media screen and (max-width: 768px){/* 当最大宽度小于786px时 下面的样式就会生效 */
+	.m-mobile-hide{
+		display: none !important;/* 适应手机端, 当宽度小于786px时, 会隐藏被该样式修饰的标签 */
+	}
+	.m-mobile-show{
+		display: block !important;/* 在手机端不隐藏 */
+	}
+	.m-padded-lr-responsive{/* 在手机端 使用该样式的标签的左右内边距会被清零 */
+		padding-left: 0em !important;
+		padding-right: 0em !important;
+	}
+	.m-padded-lr-responsive-mimi{/* 在手机端 使用该样式的标签的左右内边距会被清零 */
+		padding-left: 0em !important;
+		padding-right: 0em !important;
+	}
+	.m-mobile-lr-clear{
+		padding-left: 0em !important;
+		padding-right: 0em !important;
+	}
+	.m-mobile-wide{
+		width: 100% !important;/* 手机端时 使用该样式的标签会左右填充满 */
+	}
+	.m-mobile-margin-left{
+		margin-left: 1.8em !important;
+	}
+}

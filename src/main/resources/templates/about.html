@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><!-- 移动端更好的浏览, 缩放比例 -->
+		<title>关于我</title>
+		<!--semantic-ui-->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+		<link rel="stylesheet" th:href="@{/css/animate.css}">
+		<link rel="stylesheet" th:href="@{/css/me.css}" />
+	</head>
+	<body>
+
+		<!-- 导航 -->
+<!--		<div th:replace="~{/commons/commons::menu(5)}"></div>-->
+		<nav class="ui attached segment m-padding-tb-mini m-shadow-small">
+			<div class="ui container">
+				<div class="ui secondary stackable menu">
+					<h3 class="ui header item">LaoPeng</h3>
+					<a th:href="@{/}" class="m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
+					<a th:href="@{/types/-1}" class="m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+					<a th:href="@{/tags/-1}" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+					<a th:href="@{/archives}" class="m-item item m-mobile-hide"><i class="mini clone icon"></i>归档</a>
+					<a th:href="@{/about}" class="m-item item m-mobile-hide active"><i class="mini info icon"></i>关于我</a>
+					<div class="right m-item item m-mobile-hide">
+						<form name="search" th:action="@{/search}" method="post" target="_blank">
+							<div class="ui icon transparent input">
+								<input type="text" name="query" placeholder="Search..." th:value="${query}" />
+								<i onclick="document.forms['search'].submit()" class="search link icon"></i>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<a href="#" class="ui menu toggle icon button m-right-top m-mobile-show">
+				<i class="sidebar icon"></i>
+			</a>
+		</nav>
+
+		<!-- 中间内容 -->
+		<div class="m-padding-tb-big m-container-large animated fadeIn">
+			<div class="ui container">
+				<div class="ui stackable grid">
+					<!-- 左边部分 -->
+					<div class="eleven wide column">
+						<div class="ui segment">
+							<img th:src="@{/images/myIntroduction.jpg}" alt="" class="ui rounded image" style="width: 800px;" />
+						</div>
+					</div>
+					<!-- 右边部分 -->
+					<div class="five wide column">
+						<div class="ui top attached segment">
+							<div class="ui header">关于我</div>
+						</div>
+						<div class="ui attached segment">
+							<p class="m-text-thin m-text-lined">Peng JiaJun，一个新入坑的Java小白，是一个没有梦想的咸鱼。</p>
+							<!-- <p class="m-text-thin m-text-lined">热爱，我啥也不热爱，哈哈哈。</p> -->
+						</div>
+						<div class="ui attached segment">
+							<div class="ui orange basic label m-margin-tb-small">编程</div>
+							<div class="ui orange basic label m-margin-tb-small">Java天下第一</div>
+							<div class="ui orange basic label m-margin-tb-small">跑步</div>
+							<div class="ui orange basic label m-margin-tb-small">看电影</div>
+						</div>
+						<div class="ui attached segment">
+							<div class="ui blue basic label m-margin-tb-small">Java</div>
+							<div class="ui blue basic label m-margin-tb-small">SSM</div>
+							<div class="ui blue basic label m-margin-tb-small">SpringBoot</div>
+							<div class="ui blue basic label m-margin-tb-small">HTML</div>
+							<div class="ui blue basic label m-margin-tb-small">JavaScript</div>
+							<div class="ui blue basic label m-margin-tb-small">MySQL</div>
+							<div class="ui blue basic label m-margin-tb-small">...</div>
+						</div>
+						<div class="ui bottom attached segment">
+							<a href="#" class="ui gethub circular icon button" data-content="http:无" data-position="bottom center"><i class="github icon"></i></a>
+							<a href="#" class="ui wx circular icon button"><i class="weixin icon"></i></a>
+							<a href="#" class="ui qq circular icon button" data-content="2779824672" data-position="bottom center"><i class="qq icon"></i></a>
+						</div>
+						<div class="ui wechat-wx flowing popup transition hidden">
+							<img th:src="@{/images/wechat.jpg}" alt="wx" class="ui rounded image" style="width: 100px;" />
+						</div>
+						<div class="ui wechat-qq flowing popup transition hidden">
+							<img th:src="@{/images/qq.png}" alt="qq" class="ui rounded image" style="width: 100px;" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 底部footer -->
+		<footer th:replace="~{commons/commons::footer}"></footer>
+
+
+		<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+		<script th:src="@{/js/bjStyle.js}"></script>
+
+		<script type="text/javascript">
+			$('.menu.toggle').click(function() {
+				$('.m-item').toggleClass('m-mobile-hide');
+			});
+			
+			$('.gethub').popup();
+			$('.wx').popup({
+				popup : $('.wechat-wx.popup'),
+				on : 'hover',
+				position: 'bottom center'
+			});
+			
+			$('.qq').popup({
+				popup : $('.wechat-qq.popup'),
+				on : 'hover',
+				position: 'bottom center'
+			});
+			
+		</script>
+	</body>
+</html>

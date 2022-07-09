@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><!-- 移动端更好的浏览, 缩放比例 -->
+    <title>搜索</title>
+    <!--semantic-ui-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" th:href="@{/css/animate.css}">
+    <link rel="stylesheet" th:href="@{/css/me.css}"/>
+</head>
+<body>
+
+<!-- 导航 -->
+<!--<nav th:replace="~{/commons/commons::menu(1)}"></nav>-->
+<nav class="ui attached segment m-padding-tb-mini m-shadow-small">
+    <div class="ui container">
+        <div class="ui secondary stackable menu">
+            <h3 class="ui header item">LaoPeng</h3>
+            <a th:href="@{/}" class="m-item item m-mobile-hide active"><i class="mini home icon"></i>首页</a>
+            <a th:href="@{/types/-1}" class="m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+            <a th:href="@{/tags/-1}" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+            <a th:href="@{/archives}" class="m-item item m-mobile-hide"><i class="mini clone icon"></i>归档</a>
+            <a th:href="@{/about}" class="m-item item m-mobile-hide"><i class="mini info icon"></i>关于我</a>
+            <div class="right m-item item m-mobile-hide">
+                <form name="search" th:action="@{/search}" method="post" target="_blank">
+                    <div class="ui icon transparent input">
+                        <input type="text" name="query" placeholder="Search..." th:value="${query}" />
+                        <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="ui menu toggle icon button m-right-top m-mobile-show">
+        <i class="sidebar icon"></i>
+    </a>
+</nav>
+
+<!-- 中间内容 -->
+<div class="m-padding-tb-big m-container-large">
+    <div class="ui container">
+
+        <div class="ui top attached segment">
+            <div class="ui middle aligned two column grid">
+                <div class="column">
+                    <h3 class="ui header teal">搜索结果</h3>
+                </div>
+                <div class="right aligned column">
+                    共 <h2 class="ui orange header m-inline-block m-text-thin" th:text="${blogs.getTotal()}"> 0 </h2>个
+                </div>
+            </div>
+        </div>
+
+        <!-- 博客 -->
+        <div class="ui top attached blue segment m-padded-lr-responsive-mimi">
+            <h1 th:text="${msg!=null and msg!='' ? msg : ''}" style="text-align: center"></h1>
+            <div th:each="blog : ${blogs}" class="ui paddend vertical segment m-padding-tb-large m-padded-lr-responsive-mimi">
+                <div class="ui middle aligned mobile reversed stackable grid">
+                    <div class="ui eleven wide column">
+                        <h3 class="ul header"><a th:href="@{/blog/{id}(id=${blog.getId()})}"
+                                                 th:text="${blog.getTitle()}" class="m-black">不想当程序猿的码农不是好码农</a></h3>
+                        <p class="m-text" th:text="${blog.getDescription()}">
+                            谁都会有艰难的时刻，当你感觉全世界都要塌了却没人能帮到你时，你可能没有意识到，真正能帮你的人只有你自己。有时候你发现，一咬牙一跺脚又是一天，然后所有困难都变成了过眼云烟。那些走过的路、吃过的苦，终究会成就更好的你。</p>
+                        <div class="ui stackable grid">
+                            <div class="eleven wide column">
+                                <div class="ui mini horizontal link list">
+                                    <div class="item">
+                                        <img th:src="@{${blog.getUser().getAvatar()}}" alt="头像"
+                                             class="ui avatar image"/>
+                                        <div class="content">
+                                            <a th:href="@{/about}" th:text="${blog.getUser().getNickname()}"
+                                               class="header">Peng JiaJun</a>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <i class="calendar icon"></i><span
+                                            th:text="${#dates.format(blog.getUpdateTime(),'yyyy-MM-dd')}"></span>
+                                    </div>
+                                    <div class="item">
+                                        <i class="eye icon"></i> <span th:text="${blog.getViews()}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right aligned five wide column">
+                                <a href="#" th:text="${blog.getType().getName()}" target="_blank"
+                                   class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui five wide column">
+                        <a th:href="@{/blog/{id}(id=${blog.getId()})}" target="_blank">
+                            <img th:src="${blog.getFirstPicture()}" alt="博客配图" class="ui rounded image">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- footer -->
+        <div class="ui bottom attached segment" th:unless="${blogs.getPageNum()<=1 and blogs.getPageNum()>=blogs.getPages()}">
+            <div class="ui middle aligned two column grid">
+                <div class="column">
+                    <a th:href="@{/search(id=${blogs.getPageNum()}-1)}" class="ui button teal basic"
+                       th:unless="${blogs.getPageNum()<=1}">上一页</a>
+                </div>
+                <div class="right aligned column">
+                    <a th:href="@{/search(id=${blogs.getPageNum()}+1)}" class="ui button teal basic"
+                       th:unless="${blogs.getPageNum()>=blogs.getPages()}">下一页</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- 底部footer -->
+<footer th:replace="~{commons/commons::footer}"></footer>
+
+
+<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<script th:src="@{/js/bjStyle.js}" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript">
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    })
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><!-- 移动端更好的浏览, 缩放比例 -->
+		<title>分类管理</title>
+		<!--semantic-ui-->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+		<link rel="stylesheet" th:href="@{/css/me.css}" />
+	</head>
+	<body>
+
+	<!-- 导航 -->
+	<nav th:replace="~{commons/adminCommons::menu(2)}"></nav>
+	<!-- 二级导航 -->
+	<div class="ui attached pointing menu">
+		<div class="ui container">
+			<div class="right menu">
+				<a th:href="@{/admin/types}" class="active blue item">列表</a>
+				<a th:href="@{/admin/types/input}" class="blue item">发布</a>
+			</div>
+		</div>
+	</div>
+
+		<div class="m-padding-tb-big m-container">
+			<div class="ui container">
+
+				<div class="ui success message" th:unless="${#strings.isEmpty(msg)}">
+					<i class="close icon"></i>
+					<div class="header">提示：</div>
+					<p th:text="${msg}">操作成功!</p>
+				</div>
+
+				<table class="ui table">
+					<thead class="center aligned">
+						<th></th>
+						<th>名称</th>
+						<th>操作</th>
+					</thead>
+					<tbody class="center aligned">
+						<!-- th:each="type : ${page.getResult()}" 就和java的foreach一样 是将 :右边的集合 依次循环赋值给 :左边的 集合中的单个类型 -->
+						<!-- th:each="type,iterStat : ${page.getResult()}" 与上面的区别就是多了个 iterStat变量, 就是thymeleaf提供的一个,怎么说呢,我也不太清楚,就是一个方便循环的东西吧 -->
+						<tr th:each="type,iterStat : ${page.getResult()}">
+							<td th:text="${iterStat.count}"></td><!-- iterStat.count 就会计数 第一次循环就是1,第二次循环就是2 -->
+							<td th:text="${type.getName()}"></td>
+							<td>
+								<form th:action="@{/admin/types/update/{id}(id=${type.getId()})}" method="post" class="m-inline-block">
+									<input type="hidden" name="pageIndex" th:value="${page.getPageNum()}" /><!-- 返回当前页码,方便修改完成后,跳回原来删除分类的那一页 -->
+									<input type="submit" value="编辑" class="ui mini blue basic button" />
+								</form>
+								<form th:action="@{/admin/types/delete/{id}(id=${type.getId()})}" method="post" class="m-inline-block">
+									<input type="hidden" name="_method" value="DELETE" /><!-- 将请求转为DELETE请求 -->
+									<input type="hidden" name="pageIndex" th:value="${page.getPageNum()}" /><!-- 返回当前页码,方便删除完成后,跳回原来删除分类的那一页 -->
+									<input type="submit" value="删除" class="ui mini red basic button" />
+								</form>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot class="left aligned">
+						<tr>
+							<th colspan="6">
+								<div class="ui mini pagination menu" th:unless="${page.getPageNum()<=1 and page.getPageNum()>=page.getPages()}">
+									<!-- th:unless="${page.getPageNum()<=1}" 因为最少就是第一页, 如果当前<=1那么就不显示 上一页的按钮 -->
+									<a th:href="@{/admin/types(id=${page.getPageNum()}-1)}" class="icon item" th:unless="${page.getPageNum()<=1}">上一页</a>
+									<a th:href="@{/admin/types(id=${page.getPageNum()}+1)}" class="icon item" th:unless="${page.getPageNum()>=page.getPages()}">下一页</a>
+									<!-- th:unless="${page.getPageNum()>=page.getPages()}" 如果当前页>=最后一页 那么就不显示下一页的按钮 -->
+								</div>
+								<a th:href="@{/admin/types/input}" class="ui mini right floated green basic button">新增</a>
+							</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+
+
+		<!-- 底部footer -->
+		<footer th:replace="~{commons/commons::footer}"></footer>
+
+
+		<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+		<script type="text/javascript">
+			$('.menu.toggle').click(function() {
+				$('.m-item').toggleClass('m-mobile-hide');
+			});
+
+			$('.ui.dropdown').dropdown();
+
+			//消息提示关闭初始化
+			$('.message .close')
+				.on('click', function () {
+				$(this)
+				.closest('.message')
+				.transition('fade');
+			});
+		</script>
+	</body>
+</html>

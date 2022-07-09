@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><!-- 移动端更好的浏览, 缩放比例 -->
+		<title>博客管理</title>
+		<!--semantic-ui-->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+		<link rel="stylesheet" th:href="@{/css/me.css}" />
+	</head>
+	<body>
+
+	<!-- 导航 -->
+	<nav th:replace="~{commons/adminCommons::menu(1)}"></nav>
+	<!-- 二级导航 -->
+	<div class="ui attached pointing menu">
+		<div class="ui container">
+			<div class="right menu">
+				<a th:href="@{/admin/index}" class="blue item">首页</a>
+				<a th:href="@{/admin/blogs}" class="active blue item">列表</a>
+				<a th:href="@{/admin/blogs/input}" class="blue item">发布</a>
+			</div>
+		</div>
+	</div>
+
+		<div class="m-padding-tb-big m-container">
+			<div class="ui container">
+				<div class="ui secondary segment form">
+					<input type="hidden" name="page"/>
+					<div class="inline fields" style="margin-bottom: 0px;">
+						<div class="field m-margin-tb-small">
+							<input type="text" name="title" placeholder="标题" />
+						</div>
+						<div class="field m-margin-tb-small">
+							<div class="ui selection dropdown">
+								<input type="hidden" name="typeId" />
+								<i class="dropdown icon"></i>
+								<div class="default text">分类</div>
+								<div class="menu">
+									<div class="item" th:data-value="0">无</div>
+									<div th:each="type : ${types}" class="item" th:data-value="${type.getId()}" th:text="${type.getName()}"></div>
+								</div>
+							</div>
+						</div>
+						<div class="field m-margin-tb-small">
+							<div class="ui checkbox">
+								<input type="checkbox" id="recommend" name="recommend" />
+								<label for="recommend">推荐</label>
+							</div>
+						</div>
+						<div class="field m-margin-tb-small">
+							<button type="button" id="search-btn" class="ui mini blue basic button"><i class="search icon" onclick="loaddata()"></i>搜索</button>
+						</div>
+					</div>
+				</div>
+				<div id="table-container">
+					<table th:fragment="blogList" class="ui compact table">
+						<thead class="center aligned">
+							<th></th>
+							<th>标题</th>
+							<th>类型</th>
+							<th>推荐</th>
+							<th>是否发布</th>
+							<th>更新时间</th>
+							<th>操作</th>
+						</thead>
+						<tbody class="center aligned">
+							<tr th:each="blog,iterStat : ${page.getResult()}">
+								<td th:text="${iterStat.count}"></td>
+								<td th:text="${blog.getTitle()}"></td>
+								<td>
+									<a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.getType().getName()}"></a>
+								</td>
+								<td th:text="${blog.isRecommend()} ? '是':'否'"></td>
+								<td th:text="${blog.isPublished()} ? '发布':'草稿'"></td>
+								<td th:text="${#dates.format(blog.getUpdateTime(),'yyyy-MM-dd hh:mm:ss')}"></td>
+								<td>
+									<form th:action="@{/admin/blogs/update/{id}(id=${blog.getId()})}" method="post" class="m-inline-block">
+										<input type="hidden" name="pageIndex" th:value="${page.getPageNum()}" /><!-- 返回当前页码,方便修改完成后,跳回原来删除分类的那一页 -->
+										<input type="submit" value="编辑" class="ui mini blue basic button" />
+									</form>
+									<form th:action="@{/admin/blogs/delete/{id}(id=${blog.getId()})}" method="post" class="m-inline-block">
+										<input type="hidden" name="_method" value="DELETE" /><!-- 将请求转为DELETE请求 -->
+										<input type="hidden" name="pageIndex" th:value="${page.getPageNum()}" /><!-- 返回当前页码,方便删除完成后,跳回原来删除分类的那一页 -->
+										<input type="submit" value="删除" class="ui mini red basic button" />
+									</form>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot class="left aligned">
+							<tr>
+								<th colspan="7">
+									<div class="ui mini pagination menu" th:unless="${page.getPageNum()<=1 and page.getPageNum()>=page.getPages()}">
+										<a onclick="page(this)" th:attr="data-page=${page.getPageNum()}-1" class="item" th:unless="${page.getPageNum()<=1}">上一页</a>
+										<a onclick="page(this)" th:attr="data-page=${page.getPageNum()}+1" class="item" th:unless="${page.getPageNum()>=page.getPages()}">下一页</a>
+									</div>
+									<a th:href="@{/admin/blogs/input}" class="ui mini right floated green basic button">新增</a>
+								</th>
+							</tr>
+						</tfoot>
+					</table>
+
+					<div class="ui success message" th:unless="${#strings.isEmpty(msg)}">
+						<i class="close icon"></i>
+						<div class="header">提示：</div>
+						<p th:text="${msg}"></p>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+		<!-- 底部footer -->
+		<footer th:replace="~{commons/commons::footer}"></footer>
+
+
+		<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+		<script type="text/javascript">
+			$('.menu.toggle').click(function() {
+				$('.m-item').toggleClass('m-mobile-hide');
+			});
+
+			$('.ui.dropdown').dropdown();
+
+			function page(obj){
+				$("[name='page']").val($(obj).data("page"));//获取form表单中的name为page的 隐藏域, 将点击上一页下一页时的页码,传递给该隐藏域作为value值
+				loaddata();
+			}
+
+			$("#search-btn").click(function () {
+				$("[name='page']").val(1);
+				loaddata();
+			});
+
+			function loaddata(){
+				$("#table-container").load(/*[[@{/admin/blogs/search}]]*/"/admin/blogs/search",{
+					title : $("[name='title']").val(),
+					typeId : $("[name='typeId']").val(),
+					recommend : $("[name='recommend']").prop('checked'),
+					id : $("[name='page']").val()
+				});
+			}
+
+			//消息提示关闭初始化
+			$('.message .close')
+				.on('click', function () {
+				$(this)
+				.closest('.message')
+				.transition('fade');
+			});
+		</script>
+	</body>
+</html>

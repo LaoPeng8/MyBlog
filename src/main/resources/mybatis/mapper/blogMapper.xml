@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjj.mapper.BlogMapper">
+
+    <select id="getBlog" parameterType="Long" resultType="com.pjj.entity.Blog">
+        select * from t_blog where id=#{id}
+    </select>
+
+    <resultMap id="resultBlog" type="com.pjj.entity.Blog">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="firstPicture" column="first_picture" />
+        <result property="flag" column="flag"/>
+        <result property="views" column="views"/>
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="appreciation" column="appreciation" />
+        <result property="shareStatement" column="share_statement" />
+        <result property="commentabled" column="commentabled" />
+        <result property="published" column="published" />
+        <result property="recommend" column="recommend" />
+        <result property="typeId" column="type_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="tagIds" column="tag_ids"/>
+        <result property="description" column="description" />
+        <association property="type" javaType="Type">
+            <id property="id" column="typeid"/>
+            <result property="name" column="typename"/>
+        </association>
+        <association property="user" javaType="User">
+            <id property="id" column="uid"/>
+            <result property="nickname" column="nickname"/>
+            <result property="username" column="username"/>
+            <result property="email" column="email"/>
+            <result property="avatar" column="avatar"/>
+        </association>
+        <collection property="tags" ofType="Tag">
+            <id property="id" column="tagid"/>
+            <result property="name" column="tagname"/>
+        </collection>
+    </resultMap>
+
+    <!-- /*博客详情*/ -->
+    <select id="getDetailedBlog" parameterType="long" resultMap="resultBlog">
+        SELECT b.id, b.first_picture, b.flag, b.title, b.content, b.views,b.description,
+        b.update_time,b.commentabled, b.share_statement, b.appreciation,b.recommend,
+        tag.id tagid, tag.name tagname,
+        typ.`id` typeid, typ.`name` typename,
+        u.`avatar`,u.`nickname`
+        FROM t_blog b
+        INNER JOIN t_blog_tags tb ON b.`id`=tb.`blog_id`
+        INNER JOIN t_tag tag ON tag.`id`=tb.`tag_id`
+        INNER JOIN t_type typ ON b.`type_id`=typ.`id`
+        INNER JOIN t_user u ON b.`user_id`=u.`id`
+        WHERE b.id = #{id}
+    </select>
+
+    <!-- 新增一个博客 id自增 -->
+    <insert id="saveBlog" parameterType="com.pjj.entity.Blog" useGeneratedKeys="true" keyProperty="id">
+        insert into t_blog(title,content,first_picture,flag,views,appreciation,share_statement,commentabled,published,recommend,create_time,update_time,type_id,user_id,tag_ids,description) values(#{title},#{content},#{firstPicture},#{flag},#{views},#{appreciation},#{shareStatement},#{commentabled},#{published},#{recommend},#{createTime},#{updateTime},#{typeId},#{userId},#{tagIds},#{description})
+    </insert>
+
+    <update id="updateViews" parameterType="long">
+        update t_blog set views = views+1 where id = #{id}
+    </update>
+
+    <insert id="saveBlogAndTag" parameterType="BlogAndTag">
+        insert into t_blog_tags (tag_id, blog_id) values (#{tagId},#{blogId});
+    </insert>
+
+
+    <resultMap id="resultBlog_background" type="com.pjj.entity.Blog">
+        <!-- 主键使用id标签 -->
+        <id property="id" column="id" />
+        <!-- 非主键使用result标签 -->
+        <result property="title" column="title" />
+        <result property="recommend" column="recommend" />
+        <result property="updateTime" column="update_time" />
+        <result property="published" column="published" />
+
+        <!-- 对象成员(该类的这个属性是个对象)使用association标签 ;javaType指定该属性的类型 -->
+        <association property="type" javaType="com.pjj.entity.Type">
+            <id property="id" column="typeid"/>
+            <result property="name" column="typename"/>
+        </association>
+    </resultMap>
+
+    <!-- 查询全部博客  后端博客展示页面 由于页面上不涉及用户表与标签表,这里就没有加用户表与标签表 (动态sql分页) -->
+    <select id="getAllBlog" resultMap="resultBlog_background">
+        SELECT b.*,t.id typeid,t.name typename
+        FROM t_blog b
+        INNER JOIN t_type t ON b.`type_id`=t.`id`
+        <where>
+            <if test="title!=null and title!=''">
+                and b.title like '%${title}%'
+            </if>
+            <if test="typeId!=null and typeId!=0">
+                and b.type_id=#{typeId}
+            </if>
+            <if test="recommend!=null and recommend!=false and recommend!=0">
+                and b.recommend=#{recommend}
+            </if>
+        </where>
+    </select>
+    
+    <!-- 查询全部博客, 前端展示 页面 由于页面上不涉及标签表,这里就没有加标签表 -->
+    <select id="selectAllBlog" resultMap="resultBlog">
+        SELECT b.`id`, b.`title`,b.`description`,b.`first_picture`,b.`create_time`,b.`update_time`,b.`views`,
+        u.`nickname`,u.`avatar`, t.`name` typename
+        FROM t_blog b
+        INNER JOIN t_user u ON b.`user_id`=u.`id`
+        INNER JOIN t_type t ON b.`type_id`=t.`id`
+        ORDER BY b.`create_time` DESC
+    </select>
+
+    <!-- 根据前端搜索框输入的值 查询标题或者描述包含 xx值 的博客 -->
+    <select id="selectBySearch" parameterType="string" resultMap="resultBlog">
+        SELECT b.`id`, b.`title`,b.`description`,b.`first_picture`,b.`create_time`,b.`update_time`,b.`views`,
+        u.`nickname`,u.`avatar`, t.`name` typename
+        FROM t_blog b
+        INNER JOIN t_user u ON b.`user_id`=u.`id`
+        INNER JOIN t_type t ON b.`type_id`=t.`id`
+        <if test="query!=null and query!=''">
+            WHERE b.title LIKE '%${query}%' or b.description LIKE '%${query}%'
+        </if>
+        <if test="query==null and query==''">
+            WHERE 1=0
+        </if>
+        ORDER BY b.`create_time` DESC
+    </select>
+
+    <!-- 查询出前6条推荐的博客标题 -->
+    <select id="selectAllByTop" resultType="com.pjj.entity.Blog">
+        SELECT id,title FROM t_blog
+        WHERE published = 1
+        ORDER BY create_time DESC
+        LIMIT 0,6
+    </select>
+
+    <!-- 根据分类id查询出对应分类的全部博客 -->
+    <select id="selectAllByTypeId" parameterType="long" resultMap="resultBlog">
+        SELECT b.`id`, b.`title`,b.`description`,b.`first_picture`,b.`create_time`,b.`update_time`,b.`views`,
+        u.`nickname`,u.`avatar`, t.`name` typename
+        FROM t_type t
+        INNER JOIN t_blog b ON t.`id`=b.`type_id`
+        INNER JOIN t_user u ON b.`user_id`=u.`id`
+        WHERE t.`id`=#{id}
+    </select>
+
+    <select id="selectAllByTagId" parameterType="long" resultMap="resultBlog">
+        select b.id, b.title, b.first_picture, b.views, b.update_time, b.description,
+        t.name typename, t.id typeid,
+        t1.name tagname, t1.id tagid,
+        u.nickname, u.avatar
+        from t_blog b, t_type t, t_user u, t_blog_tags tb, t_tag t1
+        where b.type_id = t.id and u.id = b.user_id and tb.blog_id = b.id and tb.tag_id = t1.id and t1.id = #{tagId}
+        order by b.update_time desc
+    </select>
+
+    <!-- 查询所有博客 按照年份分类 并最后返回 年份.   DATE_FORMAT() 函数用于以不同的格式显示日期/时间数据。 %Y代表返回 年，4 位 -->
+    <select id="selectGroupYear" resultType="string">
+        SELECT DATE_FORMAT(update_time, '%Y') AS 'year'
+        FROM t_blog
+        GROUP BY YEAR
+        ORDER BY year DESC
+    </select>
+
+    <select id="selectAllByYear" parameterType="string" resultMap="resultBlog">
+        SELECT * FROM t_blog WHERE DATE_FORMAT(update_time, '%Y') = #{year} ORDER BY update_time DESC
+    </select>
+
+    <update id="updateBlog" parameterType="com.pjj.entity.Blog">
+        update t_blog set title = #{title},content = #{content},first_picture = #{firstPicture},flag = #{flag},published = #{published},description = #{description},
+        appreciation = #{appreciation},share_statement = #{shareStatement},commentabled = #{commentabled},
+        recommend = #{recommend},update_time = #{updateTime},type_id = #{type.id},tag_ids = #{tagIds}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteBlog" parameterType="long">
+        delete from t_blog where id=#{id}
+    </delete>
+
+    <select id="countBlog" resultType="int">
+        select count(*) from t_blog
+    </select>
+</mapper>

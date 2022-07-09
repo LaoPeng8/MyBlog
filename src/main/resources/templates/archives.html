@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><!-- 移动端更好的浏览, 缩放比例 -->
+		<title>归档</title>
+		<!--semantic-ui-->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+		<link rel="stylesheet" th:href="@{/css/animate.css}"/>
+		<link rel="stylesheet" th:href="@{/css/me.css}" />
+	</head>
+	<body>
+
+		<!-- 导航 -->
+<!--		<div th:replace="~{/commons/commons::menu(4)}"></div>-->
+		<nav class="ui attached segment m-padding-tb-mini m-shadow-small">
+			<div class="ui container">
+				<div class="ui secondary stackable menu">
+					<h3 class="ui header item">LaoPeng</h3>
+					<a th:href="@{/}" class="m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
+					<a th:href="@{/types/-1}" class="m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+					<a th:href="@{/tags/-1}" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+					<a th:href="@{/archives}" class="m-item item m-mobile-hide active"><i class="mini clone icon"></i>归档</a>
+					<a th:href="@{/about}" class="m-item item m-mobile-hide"><i class="mini info icon"></i>关于我</a>
+					<div class="right m-item item m-mobile-hide">
+						<form name="search" th:action="@{/search}" method="post" target="_blank">
+							<div class="ui icon transparent input">
+								<input type="text" name="query" placeholder="Search..." th:value="${query}" />
+								<i onclick="document.forms['search'].submit()" class="search link icon"></i>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<a href="#" class="ui menu toggle icon button m-right-top m-mobile-show">
+				<i class="sidebar icon"></i>
+			</a>
+		</nav>
+
+		<div class="m-padding-tb-big m-container animated fadeIn">
+			<div class="ui container">
+				<!-- header -->
+				<div class="ui top attached padded segment">
+					<div class="ui middle aligned two column grid">
+						<div class="column">
+							<h3 class="ui header teal">归档</h3>
+						</div>
+						<div class="right aligned column">
+							共 <h2 class="ui orange header m-inline-block m-text-thin" th:text="${blogLength}"> 114 </h2> 篇博客
+						</div>
+					</div>
+				</div>
+
+				<th:block th:each="item : ${archives}">
+					<h3 class="ui center aligned header" style="margin-top: 60px;" th:text="${item.key}">2020</h3>
+					<div class="ui fluid wide vetical menu attached" th:each="blog : ${item.value}">
+						<a th:href="@{/blog/{id}(id=${blog.getId()})}" target="_blank" class="item m-pc-wide">
+						<span>
+							<i class="mini blue circle icon" style="margin-right: 10px;"></i><span th:text="${blog.getTitle()}">不想当程序猿的码农不是好码农</span>
+							<div class="ui blue basic left pointing label m-padded-mini m-text-thin" th:text="${#dates.format(blog.updateTime,'MMMdd')}">7月1日</div>
+						</span>
+							<span style="margin: auto; margin-right: 15px;" >
+							<div class="ui orange basic left pointing label m-padded-mini m-text-thin" th:text="${blog.flag}">原创</div>
+						</span>
+						</a>
+					</div>
+				</th:block>
+				
+			</div>
+		</div>
+
+
+		<!-- 底部footer -->
+		<footer th:replace="~{commons/commons::footer}"></footer>
+
+
+		<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+		<script th:src="@{/js/bjStyle.js}"></script>
+
+		<script type="text/javascript">
+			$('.menu.toggle').click(function() {
+				$('.m-item').toggleClass('m-mobile-hide');
+			});
+		</script>
+	</body>
+</html>

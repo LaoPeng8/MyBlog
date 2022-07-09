@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" th:href="@{/css/animate.css}">
+    <link rel="stylesheet" th:href="@{/css/me.css}"/>
+    <title>404</title>
+</head>
+<body>
+<!--    <nav th:replace="~{/commons/commons::menu(0)}"></nav>-->
+<nav class="ui attached segment m-padding-tb-mini m-shadow-small">
+    <div class="ui container">
+        <div class="ui secondary stackable menu">
+            <h3 class="ui header item">LaoPeng</h3>
+            <a th:href="@{/}" class="m-item item m-mobile-hide active"><i class="mini home icon"></i>首页</a>
+            <a th:href="@{/types/-1}" class="m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+            <a th:href="@{/tags/-1}" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+            <a th:href="@{/archives}" class="m-item item m-mobile-hide"><i class="mini clone icon"></i>归档</a>
+            <a th:href="@{/about}" class="m-item item m-mobile-hide"><i class="mini info icon"></i>关于我</a>
+            <div class="right m-item item m-mobile-hide">
+                <form name="search" th:action="@{/search}" method="post" target="_blank">
+                    <div class="ui icon transparent input">
+                        <input type="text" name="query" placeholder="Search..." th:value="${query}" />
+                        <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="ui menu toggle icon button m-right-top m-mobile-show">
+        <i class="sidebar icon"></i>
+    </a>
+</nav>
+
+    <br/>
+    <br/>
+    <br/>
+    <div class="m-container-small m-padding-tb-massive">
+        <div class="ui error message">
+            <div class="ui contianer">
+                <h2>404</h2>
+                <p>资源不存在</p>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+    <footer th:replace="~{commons/commons::footer}"></footer>
+</body>
+</html>
